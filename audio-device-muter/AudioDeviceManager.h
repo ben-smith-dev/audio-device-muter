@@ -15,7 +15,7 @@ private:
 
 public:
 	HRESULT GetDefaultAudioDevice();
-	HRESULT PrintDevies();
+	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPWSTR* deviceId);
 
 	std::unordered_map<LPWSTR, AudioDevice*> GetDevices();
