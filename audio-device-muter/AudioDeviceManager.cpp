@@ -83,3 +83,22 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 
 	return S_OK;
 }
+
+HRESULT AudioDeviceManager::PrintDevices()
+{
+	HRESULT hr;
+
+	for (auto& device : devices) {
+		auto audioDevice = device.second;
+		
+		hr = audioDevice->Print();
+		if (FAILED(hr)) { return hr; }
+	}
+
+	return S_OK;
+}
+
+HRESULT AudioDeviceManager::PrintDevice(LPWSTR* deviceID)
+{
+	return devices[*deviceID]->Print();
+}
