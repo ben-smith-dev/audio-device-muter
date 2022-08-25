@@ -9,6 +9,8 @@
 class AudioDeviceManager
 {
 private:
+	CONST EDataFlow DATA_FLOW = EDataFlow::eCapture;
+
 	std::unordered_map<LPWSTR, AudioDevice*> devices;
 
 public:
