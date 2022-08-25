@@ -17,7 +17,7 @@ AudioDevice::AudioDevice(
 AudioDevice::~AudioDevice()
 {
 	// De-increments the refernce count of each interface.
-	AudioDevice::ReleaseInterfaceReferences();
+	// AudioDevice::ReleaseInterfaceReferences();
 }
 
 HRESULT AudioDevice::GetFriendlyName(LPWSTR* deviceFriendlyname)
