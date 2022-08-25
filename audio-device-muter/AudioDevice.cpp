@@ -37,3 +37,10 @@ HRESULT AudioDevice::GetFriendlyName(LPWSTR* deviceFriendlyname)
 	
 	return S_OK;
 }
+
+HRESULT AudioDevice::GetState(DWORD* deviceState) 
+{
+	HRESULT hr = device->GetState(deviceState);
+
+	return hr;
+}
