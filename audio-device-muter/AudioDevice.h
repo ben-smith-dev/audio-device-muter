@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
+#include <Functiondiscoverykeys_devpkey.h>
 
 class AudioDevice
 {
