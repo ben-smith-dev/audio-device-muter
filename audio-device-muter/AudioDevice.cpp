@@ -44,3 +44,10 @@ HRESULT AudioDevice::GetState(DWORD* deviceState)
 
 	return hr;
 }
+
+HRESULT AudioDevice::GetMute(BOOL* isMuted)
+{
+	HRESULT hr = endpointVolume->GetMute(isMuted);
+
+	return hr;
+}
