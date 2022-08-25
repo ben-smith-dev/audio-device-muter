@@ -51,3 +51,11 @@ HRESULT AudioDevice::GetMute(BOOL* isMuted)
 
 	return hr;
 }
+
+HRESULT AudioDevice::SetMute(BOOL muteState)
+{	
+	// TODO: find a better guidEventContext, maybe the ID of the endpointVolume interface?
+	HRESULT hr = endpointVolume->SetMute(muteState, nullptr);
+
+	return hr;
+}
