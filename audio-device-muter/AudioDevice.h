@@ -19,6 +19,8 @@ public:
 		IPropertyStore* props
 	);
 
+	~AudioDevice();
+
 	HRESULT GetFriendlyName(LPWSTR* deviceFriendlyname);
 	HRESULT GetState(DWORD* state);
 	HRESULT GetMute(BOOL* isMuted);
