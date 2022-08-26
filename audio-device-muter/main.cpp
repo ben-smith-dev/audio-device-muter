@@ -8,7 +8,9 @@ int main()
 
 	AudioDeviceManager* deviceManager = new AudioDeviceManager;
 
-	CoInitializeEx(nullptr, tagCOINIT::COINIT_APARTMENTTHREADED);
+	// Attempts to initialize the COM interface.
+	hr = CoInitializeEx(nullptr, tagCOINIT::COINIT_APARTMENTTHREADED);
+	if (FAILED(hr)) { return 1; }
 
 	hr = deviceManager->GetDefaultAudioDevice();
 	if (FAILED(hr)) { return 1; }
