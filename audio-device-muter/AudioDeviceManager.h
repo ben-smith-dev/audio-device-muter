@@ -14,9 +14,12 @@ private:
 	std::unordered_map<LPWSTR, AudioDevice*> devices;
 
 public:
-	HRESULT GetDefaultAudioDevice();
 	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPWSTR* deviceId);
 
-	std::unordered_map<LPWSTR, AudioDevice*> GetDevices();
+	HRESULT GetDefaultAudioDevice(AudioDevice* defaultDevice);
+	HRESULT GetDefaultAudioDevice();
+
+	HRESULT GetDevices(std::unordered_map<LPWSTR, AudioDevice*>* devices);
+	HRESULT GetDevices();
 };
