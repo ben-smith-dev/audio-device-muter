@@ -33,8 +33,11 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 		&device
 	);
 	if (FAILED(hr)) { return hr; }
+	
+	// Check if a device was found, return is not
+	if (device == nullptr) { return S_OK;  }
 
-	// Get device unique ID
+	// Get device unique 
 	hr = device->GetId(&pwszID);
 	if (FAILED(hr)) { return hr; }
 
