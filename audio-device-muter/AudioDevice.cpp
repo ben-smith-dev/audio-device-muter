@@ -20,9 +20,8 @@ AudioDevice::~AudioDevice()
 	// AudioDevice::ReleaseInterfaceReferences();
 }
 
-HRESULT AudioDevice::GetFriendlyName(LPWSTR* deviceFriendlyname)
+HRESULT AudioDevice::GetFriendlyName(PROPVARIANT& varDeviceName)
 {
-	// Initialize the propvariant structure.
 	PROPVARIANT varName;
 	PropVariantInit(&varName);
 
@@ -31,14 +30,11 @@ HRESULT AudioDevice::GetFriendlyName(LPWSTR* deviceFriendlyname)
 		PKEY_Device_FriendlyName,
 		&varName
 	);
-	if (FAILED(hr)) { return hr; }
 
-	*deviceFriendlyname = varName.pwszVal;
+	PropVariantCopy(&varDeviceName, &varName);
 	
-	// Clear propvariant structure.
 	PropVariantClear(&varName);
-	
-	return S_OK;
+	return hr;
 }
 
 HRESULT AudioDevice::GetState(DWORD* deviceState) 
@@ -66,22 +62,25 @@ HRESULT AudioDevice::SetMute(BOOL muteState)
 HRESULT AudioDevice::Print()
 {
 	HRESULT hr;
-
+	
 	// Get device name.
-	LPWSTR* deviceName = nullptr;
-	hr = GetFriendlyName(deviceName);
+	PROPVARIANT deviceNameVar;
+
+	hr = GetFriendlyName(deviceNameVar);
 	if (FAILED(hr)) { return hr; }
 
 	//Print device name.
-	printf("Device name: %s.\n", deviceName);
+	printf("Device name:\t\t%S\n", deviceNameVar.pwszVal);
 
 	// Get the devices unique ID.
-	LPWSTR* deviceID = nullptr;
-	hr = device->GetId(deviceID);
+	LPWSTR deviceID = new WCHAR;
+	hr = device->GetId(&deviceID);
 	if (FAILED(hr)) { return hr; }
 
+	printf("Device ID:\t\t%S\n", deviceID);
+
 	// Get the devices state
-	DWORD* deviceState = nullptr;
+	DWORD* deviceState = new DWORD;
 	hr = GetState(deviceState);
 	if (FAILED(hr)) { return hr; }
 
@@ -97,16 +96,16 @@ HRESULT AudioDevice::Print()
 	};
 
 	// Print device state.
-	printf("Device State: %s\n", stateToString(*deviceState));
+	printf("Device State:\t\t%s\n", stateToString(*deviceState));
 
 	// Get current device mute state.
-	BOOL* isMuted = nullptr;
+	BOOL* isMuted = new BOOL;
 	hr = GetMute(isMuted);
 	if (FAILED(hr)) { return hr; }
 
 	// Print mute state as string.
 	auto boolToString = [](BOOL x) {return x ? "True" : "False"; };
-	printf("Device is muted: %s.\n", boolToString(*isMuted));
+	printf("Device is muted:\t%s\n", boolToString(*isMuted));
 
 	return S_OK;
 }

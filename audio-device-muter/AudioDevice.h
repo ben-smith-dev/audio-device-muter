@@ -21,7 +21,7 @@ public:
 
 	~AudioDevice();
 
-	HRESULT GetFriendlyName(LPWSTR* deviceFriendlyname);
+	HRESULT GetFriendlyName(PROPVARIANT& deviceFriendlyname);
 	HRESULT GetState(DWORD* state);
 	HRESULT GetMute(BOOL* isMuted);
 	HRESULT SetMute(BOOL muteState);
