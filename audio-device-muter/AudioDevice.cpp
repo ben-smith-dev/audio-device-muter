@@ -72,6 +72,9 @@ HRESULT AudioDevice::Print()
 	//Print device name.
 	printf("Device name:\t\t%S\n", deviceNameVar.pwszVal);
 
+	//Clear friendly name prop variant.
+	PropVariantClear(&deviceNameVar);
+
 	// Get the devices unique ID.
 	LPWSTR deviceID = new WCHAR;
 	hr = device->GetId(&deviceID);
