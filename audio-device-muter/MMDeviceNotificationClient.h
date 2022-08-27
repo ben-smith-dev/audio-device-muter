@@ -12,7 +12,7 @@ private:
 	HRESULT CheckDeviceDataFlow(EDataFlow* dataFlow);
 
 public:
-	MMDeviceNotificationClient();
+	MMDeviceNotificationClient(EDataFlow dataFlow);
 	~MMDeviceNotificationClient();
 
 	// IUnknown methods
