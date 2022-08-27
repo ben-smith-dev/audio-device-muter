@@ -22,9 +22,11 @@ public:
 	~AudioDevice();
 
 	HRESULT GetFriendlyName(PROPVARIANT& deviceFriendlyname);
+	HRESULT GetMMDeviceID(LPWSTR* deviceID);
 	HRESULT GetState(DWORD* state);
 	HRESULT GetMute(BOOL* isMuted);
 	HRESULT SetMute(BOOL muteState);
+
 	HRESULT Print();
 
 	int ReleaseInterfaceReferences();

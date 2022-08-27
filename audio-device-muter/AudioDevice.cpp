@@ -59,6 +59,15 @@ HRESULT AudioDevice::SetMute(BOOL muteState)
 	return hr;
 }
 
+HRESULT AudioDevice::GetMMDeviceID(LPWSTR* deviceID)
+{
+	HRESULT hr;
+
+	hr = device->GetId(deviceID);
+
+	return hr;
+}
+
 HRESULT AudioDevice::Print()
 {
 	HRESULT hr;
