@@ -118,7 +118,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	// Get device collection from enumerator.
 	hr = deviceEnumerator->EnumAudioEndpoints(
 		DATA_FLOW,
-		DEVICE_STATE_ACTIVE,
+		DEVICE_STATE_ACTIVE | DEVICE_STATE_DISABLED,
 		&deviceCollection
 	);
 	if (FAILED(hr)) { return hr; }
@@ -141,10 +141,7 @@ HRESULT AudioDeviceManager::GetDevices()
 
 		BOOL inMap = false;
 		hr = CheckIfDeviceInMap(&pwszID, &inMap);
-		if (inMap) { 
-			printf("SkIPPED.\n");
-			continue; 
-		}
+		if (inMap) { continue; }
 
 		// Get audio endpoint volume
 		endpointVolume = nullptr;
