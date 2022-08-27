@@ -87,6 +87,139 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	return S_OK;
 }
 
+HRESULT AudioDeviceManager::GetDevices()
+{
+	HRESULT hr;
+
+	IMMDeviceEnumerator* deviceEnumerator = nullptr;
+	IMMDeviceCollection* deviceCollection = nullptr;
+
+	// Device data.
+	IMMDevice* device = nullptr;
+	IPropertyStore* props = nullptr;
+	IAudioEndpointVolume* endpointVolume = nullptr;
+	LPWSTR pwszID = NULL;
+
+	// Initialize COM interface.
+	hr = CoInitializeEx(nullptr, tagCOINIT::COINIT_APARTMENTTHREADED);
+	if (FAILED(hr)) { return hr; }
+
+	//Create device enumerator.
+	hr = CoCreateInstance(
+		__uuidof(MMDeviceEnumerator),
+		NULL,
+		CLSCTX_ALL,
+		__uuidof(IMMDeviceEnumerator),
+		(LPVOID*)&deviceEnumerator
+	);
+	if (FAILED(hr)) { return hr; }
+
+
+	// Get device collection from enumerator.
+	hr = deviceEnumerator->EnumAudioEndpoints(
+		DATA_FLOW,
+		DEVICE_STATE_ACTIVE,
+		&deviceCollection
+	);
+	if (FAILED(hr)) { return hr; }
+
+	// Get number of devics in collection.
+	UINT deviceCount = 0;
+	hr = deviceCollection->GetCount(&deviceCount);
+	if (FAILED(hr)) { return hr; }
+
+	for (UINT i = 0; i < deviceCount; i += 1)
+	{
+		device = nullptr;
+		hr = deviceCollection->Item(i, &device);
+		if (FAILED(hr)) { return hr; }
+
+		// Get device unique 
+		pwszID = nullptr;
+		hr = device->GetId(&pwszID);
+		if (FAILED(hr)) { return hr; }
+
+		BOOL inMap = false;
+		hr = CheckIfDeviceInMap(&pwszID, &inMap);
+		if (inMap) { 
+			printf("SkIPPED.\n");
+			continue; 
+		}
+
+		// Get audio endpoint volume
+		endpointVolume = nullptr;
+		hr = device->Activate(
+			__uuidof(IAudioEndpointVolume),
+			CLSCTX_ALL,
+			NULL,
+			(LPVOID*)&endpointVolume
+		);
+		if (FAILED(hr)) { return hr; }
+
+		//Gets pointer to device properties
+		props = nullptr;
+		hr = device->OpenPropertyStore(
+			STGM_READ,
+			&props
+		);
+		if (FAILED(hr)) { return hr; }
+
+		// Increment reference count to interfaces
+		device->AddRef();
+		endpointVolume->AddRef();
+		props->AddRef();
+
+		// Push audio device to map
+		devices[pwszID] = new AudioDevice(
+			device,
+			endpointVolume,
+			props
+		);
+
+		// Release interface pointers;
+		device->Release();
+		device = nullptr;
+
+		endpointVolume->Release();
+		endpointVolume = nullptr;
+
+		props->Release();
+		props = nullptr;
+	}
+
+	deviceEnumerator->Release();
+	deviceEnumerator = nullptr;
+
+	deviceCollection->Release();
+	deviceCollection = nullptr;
+
+	CoUninitialize();
+
+	return S_OK;
+}
+
+HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPWSTR* deviceID, BOOL* inMap)
+{
+	HRESULT hr = S_OK;
+
+	for (auto& device : devices) {
+		auto audioDevice = device.second;
+
+		LPWSTR otherID = nullptr;
+		hr = audioDevice->GetMMDeviceID(&otherID);
+		if (FAILED(hr)) { return hr; }
+
+		// Compares the two IDs, if equal to 0, they are equal.
+		if (lstrcmpW(*deviceID, otherID) == 0)
+		{
+			*inMap = true;
+			return S_OK;
+		}
+	}
+
+	return hr;
+}
+
 HRESULT AudioDeviceManager::PrintDevices()
 {
 	HRESULT hr;

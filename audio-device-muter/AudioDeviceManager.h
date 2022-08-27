@@ -13,6 +13,8 @@ private:
 
 	std::unordered_map<LPWSTR, AudioDevice*> devices;
 
+	HRESULT CheckIfDeviceInMap(LPWSTR* deviceID, BOOL* inMap);
+
 public:
 	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPWSTR* deviceId);
