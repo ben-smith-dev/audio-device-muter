@@ -16,8 +16,8 @@ AudioDevice::AudioDevice(
 
 AudioDevice::~AudioDevice()
 {
-	// De-increments the refernce count of each interface.
-	// AudioDevice::ReleaseInterfaceReferences();
+	// De-increments the reference count of each interface.
+	ReleaseInterfaceReferences();
 }
 
 HRESULT AudioDevice::GetFriendlyName(PROPVARIANT& varDeviceName)
@@ -113,4 +113,17 @@ HRESULT AudioDevice::Print()
 	PropVariantClear(&deviceNameVar);
 
 	return S_OK;
+}
+
+int AudioDevice::ReleaseInterfaceReferences()
+{
+	device->Release();
+	endpointVolume->Release();
+	props->Release();
+
+	device = nullptr;
+	endpointVolume = nullptr;
+	props = nullptr;
+
+	return 0;
 }
