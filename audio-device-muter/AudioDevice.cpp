@@ -116,8 +116,7 @@ HRESULT AudioDevice::Print()
 	if (FAILED(hr)) { return hr; }
 
 	// Print mute state as string.
-	auto boolToString = [](BOOL x) {return x ? "True" : "False"; };
-	printf("Device Muted:\t%s\n", boolToString(*isMuted));
+	printf("Device Muted:\t%s\n", *isMuted? "TRUE" : "FALSE");
 
 	return S_OK;
 }
