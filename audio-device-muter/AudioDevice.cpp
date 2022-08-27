@@ -78,18 +78,10 @@ HRESULT AudioDevice::Print()
 	hr = GetFriendlyName(deviceNameVar);
 	if (FAILED(hr)) { return hr; }
 
-	//Print device name.
-	printf("Device Name:\t%S\n", deviceNameVar.pwszVal);
-
-	//Clear friendly name prop variant.
-	PropVariantClear(&deviceNameVar);
-
 	// Get the devices unique ID.
 	LPWSTR deviceID = new WCHAR;
 	hr = device->GetId(&deviceID);
 	if (FAILED(hr)) { return hr; }
-
-	printf("Device ID:\t%S\n", deviceID);
 
 	// Get the devices state
 	DWORD* deviceState = new DWORD;
@@ -107,16 +99,18 @@ HRESULT AudioDevice::Print()
 		}
 	};
 
-	// Print device state.
-	printf("Device State:\t%s\n", stateToString(*deviceState));
-
 	// Get current device mute state.
 	BOOL* isMuted = new BOOL;
 	hr = GetMute(isMuted);
 	if (FAILED(hr)) { return hr; }
 
-	// Print mute state as string.
-	printf("Device Muted:\t%s\n", *isMuted? "TRUE" : "FALSE");
+	printf("Device Name:\t\t%S\n",	deviceNameVar.pwszVal);
+	printf("Device ID:\t\t%S\n",	deviceID);
+	printf("Device State:\t\t%s\n", stateToString(*deviceState));
+	printf("Device Muted:\t\t%s\n", *isMuted? "TRUE" : "FALSE");
+
+	// Clear property variant.
+	PropVariantClear(&deviceNameVar);
 
 	return S_OK;
 }
