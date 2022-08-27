@@ -37,3 +37,47 @@ HRESULT MMDeviceNotificationClient::QueryInterface(
     }
     return S_OK;
 }
+
+HRESULT MMDeviceNotificationClient::OnDeviceAdded(LPCWSTR pwstrDeviceId)
+{
+    HRESULT hr;
+
+    return hr;
+}
+
+HRESULT MMDeviceNotificationClient::OnDeviceRemoved(LPCWSTR pwstrDeviceId)
+{
+    HRESULT hr;
+
+    return hr;
+}
+
+HRESULT MMDeviceNotificationClient::OnDefaultDeviceChanged(
+    EDataFlow flow, 
+    ERole role,
+    LPCWSTR pwstrDeviceId)
+{
+    HRESULT hr;
+
+    return hr;
+}
+
+HRESULT MMDeviceNotificationClient::OnDeviceStateChanged(
+    LPCWSTR deviceId,
+    DWORD newState
+)
+{
+    HRESULT hr;
+
+    return hr;
+}
+
+HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
+    LPCWSTR deviceId,
+    const PROPERTYKEY propKey
+)
+{
+    HRESULT hr;
+
+    return hr;
+}
