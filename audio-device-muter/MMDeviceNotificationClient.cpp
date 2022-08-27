@@ -1,5 +1,19 @@
 #include "MMDeviceNotificationClient.h"
 
+MMDeviceNotificationClient::MMDeviceNotificationClient(EDataFlow flow)
+{
+    this->cRef = 1;
+    this->deviceEnumerator = nullptr;
+    this->dataFlow = flow;
+}
+
+MMDeviceNotificationClient::~MMDeviceNotificationClient()
+{
+    this->deviceEnumerator = nullptr;
+
+    Release();
+}
+
 ULONG MMDeviceNotificationClient::AddRef()
 {
 	return InterlockedIncrement(&cRef);
@@ -85,6 +99,8 @@ HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
 HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(EDataFlow* flow)
 {
     HRESULT hr;
+
+
 
     return hr;
 }
