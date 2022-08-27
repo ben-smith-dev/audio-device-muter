@@ -62,12 +62,12 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	endpointVolume->AddRef();
 	props->AddRef();
 
-	// Push audio device to map
-	devices[pwszID] = new AudioDevice(
+	// Push audio device to decices vector.
+	devices.push_back(new AudioDevice(
 		device,
 		endpointVolume,
 		props
-	);
+	));
 
 	// Release interface pointers;
 	device->Release();
@@ -167,11 +167,11 @@ HRESULT AudioDeviceManager::GetDevices()
 		props->AddRef();
 
 		// Push audio device to map
-		devices[(LPWSTR)deviceID] = new AudioDevice(
+		devices.push_back(new AudioDevice(
 			device,
 			endpointVolume,
 			props
-		);
+		));
 
 		// Release interface pointers;
 		device->Release();
@@ -200,10 +200,8 @@ HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap)
 	HRESULT hr = S_OK;
 
 	for (auto& device : devices) {
-		auto audioDevice = device.second;
-
 		LPWSTR otherID = nullptr;
-		hr = audioDevice->GetMMDeviceID(&otherID);
+		hr = device->GetMMDeviceID(&otherID);
 		if (FAILED(hr)) { return hr; }
 
 		// Compares the two IDs, if equal to 0, they are equal.
@@ -221,10 +219,8 @@ HRESULT AudioDeviceManager::PrintDevices()
 {
 	HRESULT hr;
 
-	for (auto& device : devices) {
-		auto audioDevice = device.second;
-		
-		hr = audioDevice->Print();
+	for (auto& device : devices) {;
+		hr = device->Print();
 		if (FAILED(hr)) { return hr; }
 	}
 
@@ -236,16 +232,14 @@ HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
 	HRESULT hr = S_OK;
 
 	for (auto& device : devices) {
-		auto audioDevice = device.second;
-
 		LPWSTR otherID = nullptr;
-		hr = audioDevice->GetMMDeviceID(&otherID);
+		hr = device->GetMMDeviceID(&otherID);
 		if (FAILED(hr)) { return hr; }
 
 		// Compares the two IDs, if equal to 0 they are equal.
 		if (lstrcmpW(*deviceID, otherID) == 0)
 		{
-			audioDevice->Print();
+			device->Print();
 			return S_OK;
 		}
 	}
