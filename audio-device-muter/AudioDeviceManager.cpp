@@ -231,7 +231,24 @@ HRESULT AudioDeviceManager::PrintDevices()
 	return S_OK;
 }
 
-HRESULT AudioDeviceManager::PrintDevice(LPWSTR* deviceID)
+HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
 {
-	return devices[*deviceID]->Print();
+	HRESULT hr = S_OK;
+
+	for (auto& device : devices) {
+		auto audioDevice = device.second;
+
+		LPWSTR otherID = nullptr;
+		hr = audioDevice->GetMMDeviceID(&otherID);
+		if (FAILED(hr)) { return hr; }
+
+		// Compares the two IDs, if equal to 0 they are equal.
+		if (lstrcmpW(*deviceID, otherID) == 0)
+		{
+			audioDevice->Print();
+			return S_OK;
+		}
+	}
+
+	return hr;
 }
