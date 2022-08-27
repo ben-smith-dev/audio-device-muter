@@ -98,7 +98,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	IMMDevice* device = nullptr;
 	IPropertyStore* props = nullptr;
 	IAudioEndpointVolume* endpointVolume = nullptr;
-	LPWSTR pwszID = NULL;
+	LPCWSTR deviceID = NULL;
 
 	// Initialize COM interface.
 	hr = CoInitializeEx(nullptr, tagCOINIT::COINIT_APARTMENTTHREADED);
@@ -135,12 +135,12 @@ HRESULT AudioDeviceManager::GetDevices()
 		if (FAILED(hr)) { return hr; }
 
 		// Get device unique 
-		pwszID = nullptr;
-		hr = device->GetId(&pwszID);
+		deviceID = nullptr;
+		hr = device->GetId((LPWSTR*)&deviceID);
 		if (FAILED(hr)) { return hr; }
 
-		BOOL inMap = false;
-		hr = CheckIfDeviceInMap(&pwszID, &inMap);
+		BOOL inMap = false;;
+		hr = CheckIfDeviceInMap(&deviceID, &inMap);
 		if (inMap) { continue; }
 
 		// Get audio endpoint volume
@@ -167,7 +167,7 @@ HRESULT AudioDeviceManager::GetDevices()
 		props->AddRef();
 
 		// Push audio device to map
-		devices[pwszID] = new AudioDevice(
+		devices[(LPWSTR)deviceID] = new AudioDevice(
 			device,
 			endpointVolume,
 			props
@@ -195,7 +195,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	return S_OK;
 }
 
-HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPWSTR* deviceID, BOOL* inMap)
+HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap)
 {
 	HRESULT hr = S_OK;
 
