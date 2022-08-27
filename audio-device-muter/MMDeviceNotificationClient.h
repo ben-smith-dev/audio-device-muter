@@ -19,7 +19,10 @@ public:
 
 	ULONG STDMETHODCALLTYPE AddRef();
 	ULONG STDMETHODCALLTYPE Release();
-	HRESULT STDMETHODCALLTYPE QueryInterface();
+	HRESULT STDMETHODCALLTYPE QueryInterface(
+		REFIID riid,
+		VOID** ppvInterface
+	);
 
 	// IMMNotificationClient callback methods
 
