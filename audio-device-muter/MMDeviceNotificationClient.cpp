@@ -81,3 +81,10 @@ HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
 
     return hr;
 }
+
+HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(EDataFlow* flow)
+{
+    HRESULT hr;
+
+    return hr;
+}
