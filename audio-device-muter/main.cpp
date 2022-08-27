@@ -15,6 +15,9 @@ int main()
 	hr = deviceManager->GetDefaultAudioDevice();
 	if (FAILED(hr)) { return 1; }
 
+	hr = deviceManager->GetDevices();
+	if (FAILED(hr)) { return 1; }
+
 	hr = deviceManager->PrintDevices();
 	if (FAILED(hr)) { return 1; }
 
