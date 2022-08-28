@@ -188,7 +188,7 @@ HRESULT AudioDeviceManager::PrintDevices()
 {
 	HRESULT hr;
 
-	for (auto& mmDevice : devices) {;
+	for (auto& mmDevice : devices) {
 		hr = mmDevice->Print();
 		if (FAILED(hr)) { return hr; }
 
@@ -200,22 +200,70 @@ HRESULT AudioDeviceManager::PrintDevices()
 
 HRESULT AudioDeviceManager::MuteDevices()
 {
+	HRESULT hr;
 
+	for (auto& mmDevice : devices) {
+		hr = mmDevice->SetMute(TRUE);
+		if (FAILED(hr)) { return hr; }
+
+		printf("\n");
+	}
+
+	return S_OK;
 }
 
 HRESULT AudioDeviceManager::UnmuteDevices()
 {
+	HRESULT hr;
 
+	for (auto& mmDevice : devices) {
+		hr = mmDevice->SetMute(FALSE);
+		if (FAILED(hr)) { return hr; }
+
+		printf("\n");
+	}
+
+	return S_OK;
 }
 
 HRESULT AudioDeviceManager::MuteDevice(LPCWSTR* deviceID)
 {
+	HRESULT hr = S_OK;
 
+	for (auto& mmDevice : devices) {
+		LPWSTR otherID = nullptr;
+		hr = mmDevice->GetMMDeviceID(&otherID);
+		if (FAILED(hr)) { return hr; }
+
+		// Compares the two IDs, if equal to 0 they are equal.
+		if (lstrcmpW(*deviceID, otherID) == 0)
+		{
+			mmDevice->SetMute(TRUE);
+			return S_OK;
+		}
+	}
+
+	return hr;
 }
 
 HRESULT AudioDeviceManager::UnmuteDevice(LPCWSTR* deviceID)
 {
+	HRESULT hr = S_OK;
 
+	for (auto& mmDevice : devices) {
+		LPWSTR otherID = nullptr;
+		hr = mmDevice->GetMMDeviceID(&otherID);
+		if (FAILED(hr)) { return hr; }
+
+		// Compares the two IDs, if equal to 0 they are equal.
+		if (lstrcmpW(*deviceID, otherID) == 0)
+		{
+			mmDevice->SetMute(FALSE);
+			return S_OK;
+		}
+	}
+
+	return hr;
 }
 
 HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
