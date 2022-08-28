@@ -301,7 +301,7 @@ HRESULT AudioDeviceManager::UnregisterFromMMDeviceNotifications()
 	);
 	if (FAILED(hr)) { return hr; }
 
-	// Register for notifications.
+	// Unregister for notifications.
 	hr = deviceEnumerator->UnregisterEndpointNotificationCallback(
 		mmNotificationClient
 	);
