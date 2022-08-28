@@ -280,6 +280,8 @@ HRESULT AudioDeviceManager::RegisterForMMDeviceNotifications()
 		mmNotificationClient
 	);
 
+	deviceEnumerator->Release();
+
 	return hr;
 }
 
