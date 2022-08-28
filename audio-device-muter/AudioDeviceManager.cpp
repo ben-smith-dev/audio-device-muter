@@ -2,6 +2,7 @@
 
 AudioDeviceManager::AudioDeviceManager()
 {
+	deviceEnumerator = nullptr;
 	mmNotificationClient = nullptr;
 }
 
