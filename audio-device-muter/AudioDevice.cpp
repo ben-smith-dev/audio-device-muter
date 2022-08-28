@@ -21,6 +21,29 @@ AudioDevice::~AudioDevice()
 	ReleaseInterfaceReferences();
 }
 
+HRESULT AudioDevice::ConstructFrom(IMMDevice* mmDevice)
+{
+	HRESULT hr;
+
+	// Get endpointVolume interface pointer.
+	hr = mmDevice->Activate(
+		__uuidof(IAudioEndpointVolume),
+		CLSCTX_ALL,
+		NULL,
+		(LPVOID*)&endpointVolume
+	);
+	if (FAILED(hr)) { return hr; }
+
+	//Gets pointer to device properties.
+	hr = device->OpenPropertyStore(
+		STGM_READ,
+		&props
+	);
+	if (FAILED(hr)) { mmDevice->Release(); }
+
+	return hr;
+}
+
 HRESULT AudioDevice::GetFriendlyName(PROPVARIANT& varDeviceName)
 {
 	PROPVARIANT varName;

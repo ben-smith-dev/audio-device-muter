@@ -24,6 +24,8 @@ public:
 
 	~AudioDevice();
 
+	HRESULT ConstructFrom(IMMDevice* device);
+
 	HRESULT GetFriendlyName(PROPVARIANT& deviceFriendlyname);
 	HRESULT GetMMDeviceID(LPWSTR* deviceID);
 	HRESULT GetState(DWORD* state);
