@@ -52,14 +52,14 @@ HRESULT MMDeviceNotificationClient::QueryInterface(
     return S_OK;
 }
 
-HRESULT MMDeviceNotificationClient::OnDeviceAdded(LPCWSTR pwstrDeviceId)
+HRESULT MMDeviceNotificationClient::OnDeviceAdded(LPCWSTR deviceID)
 {
     HRESULT hr;
 
     return hr;
 }
 
-HRESULT MMDeviceNotificationClient::OnDeviceRemoved(LPCWSTR pwstrDeviceId)
+HRESULT MMDeviceNotificationClient::OnDeviceRemoved(LPCWSTR deviceID)
 {
     HRESULT hr;
 
@@ -69,7 +69,7 @@ HRESULT MMDeviceNotificationClient::OnDeviceRemoved(LPCWSTR pwstrDeviceId)
 HRESULT MMDeviceNotificationClient::OnDefaultDeviceChanged(
     EDataFlow flow, 
     ERole role,
-    LPCWSTR pwstrDeviceId)
+    LPCWSTR deviceID)
 {
     HRESULT hr;
 
@@ -77,7 +77,7 @@ HRESULT MMDeviceNotificationClient::OnDefaultDeviceChanged(
 }
 
 HRESULT MMDeviceNotificationClient::OnDeviceStateChanged(
-    LPCWSTR deviceId,
+    LPCWSTR deviceID,
     DWORD newState
 )
 {
