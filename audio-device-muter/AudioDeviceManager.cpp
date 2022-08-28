@@ -196,6 +196,11 @@ HRESULT AudioDeviceManager::GetDevices()
 			props
 		));
 
+		// Regiseter for volume change notifications.
+		hr = devices.back()->RegisterForVolumeNotifications();
+		
+		if (FAILED(hr)) { return hr; }
+
 		// Release interface pointers;
 		device->Release();
 		device = nullptr;
