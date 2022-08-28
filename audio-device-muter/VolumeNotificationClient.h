@@ -12,8 +12,7 @@ private:
 
 public:
 
-	VolumeNotificationClient();
-	~VolumeNotificationClient();
+	VolumeNotificationClient(BOOL muteState);
 
 	// IUnkown methods
 
