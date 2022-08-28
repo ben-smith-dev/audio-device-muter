@@ -38,4 +38,5 @@ public:
 	HRESULT GetDefaultAudioDevice();
 
 	HRESULT GetDevices();
+	HRESULT GetDevice(LPCWSTR* deviceID);
 };

@@ -164,6 +164,37 @@ HRESULT AudioDeviceManager::GetDevices()
 	return S_OK;
 }
 
+HRESULT AudioDeviceManager::GetDevice(LPCWSTR* deviceID)
+{
+	HRESULT hr;
+
+	IMMDevice* mmDevice = nullptr;
+
+	//Create device enumerator.
+	deviceEnumerator = nullptr;
+	hr = CoCreateInstance(
+		__uuidof(MMDeviceEnumerator),
+		NULL,
+		CLSCTX_ALL,
+		__uuidof(IMMDeviceEnumerator),
+		(LPVOID*)&deviceEnumerator
+	);
+	if (FAILED(hr)) { return hr; }
+
+	hr = deviceEnumerator->GetDevice(*deviceID, &mmDevice);
+	if (FAILED(hr)) { return hr; }
+
+	devices.push_back(new AudioDevice());
+
+	mmDevice->AddRef();
+	hr = devices.back()->ConstructFrom(mmDevice);
+
+	mmDevice->Release();
+	mmDevice = nullptr;
+
+	return hr;
+}
+
 HRESULT AudioDeviceManager::IsDeviceInVector(LPCWSTR* deviceID, BOOL* inMap)
 {
 	HRESULT hr = S_OK;
