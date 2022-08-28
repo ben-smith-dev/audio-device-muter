@@ -10,6 +10,7 @@ private:
 	
 	// Used to determine if a notification is needed. 
 	BOOL lastMuteState;
+	int channelAmount = 0;
 
 public:
 
