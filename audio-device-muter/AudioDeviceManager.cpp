@@ -158,7 +158,7 @@ HRESULT AudioDeviceManager::GetDevices()
 		if (FAILED(hr)) { return hr; }
 
 		BOOL inMap = false;;
-		hr = CheckIfDeviceInMap(&deviceID, &inMap);
+		hr = IsDeviceInVector(&deviceID, &inMap);
 		if (inMap) { continue; }
 
 		// Push audio device to vector.
@@ -186,7 +186,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	return S_OK;
 }
 
-HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap)
+HRESULT AudioDeviceManager::IsDeviceInVector(LPCWSTR* deviceID, BOOL* inMap)
 {
 	HRESULT hr = S_OK;
 

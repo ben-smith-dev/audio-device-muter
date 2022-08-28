@@ -17,7 +17,7 @@ private:
 	MMDeviceNotificationClient* mmNotificationClient;
 	IMMDeviceEnumerator* deviceEnumerator;
 
-	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
+	HRESULT IsDeviceInVector(LPCWSTR* deviceID, BOOL* inMap);
 
 public:
 	AudioDeviceManager();
