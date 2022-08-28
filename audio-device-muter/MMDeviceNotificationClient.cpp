@@ -98,9 +98,13 @@ HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
 
 HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(LPCWSTR deviceID, EDataFlow* flow)
 {
-    if (deviceEnumerator == nullptr) { return E_NOTFOUND; }
-
     HRESULT hr;
+
+    if (deviceEnumerator == nullptr) 
+    { 
+        hr = CreateEnumerator();
+        if (FAILED(hr)) { return hr; }
+    }
 
     // Get device using ID.
     IMMDevice* device = nullptr;
@@ -116,6 +120,22 @@ HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(LPCWSTR deviceID, EDataF
 
     device->Release();
     endpoint->Release();
+
+    return hr;
+}
+
+HRESULT MMDeviceNotificationClient::CreateEnumerator()
+{
+    HRESULT hr;
+
+    //Create device enumerator.
+    hr = CoCreateInstance(
+        __uuidof(MMDeviceEnumerator),
+        NULL,
+        CLSCTX_ALL,
+        __uuidof(IMMDeviceEnumerator),
+        (LPVOID*)&deviceEnumerator
+    );
 
     return hr;
 }
