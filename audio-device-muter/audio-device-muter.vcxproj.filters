@@ -27,6 +27,9 @@
     <ClCompile Include="MMDeviceNotificationClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VolumeNotificationClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioDevice.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MMDeviceNotificationClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeNotificationClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

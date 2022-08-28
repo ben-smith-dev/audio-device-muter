@@ -131,11 +131,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AudioDevice.cpp" />
     <ClCompile Include="MMDeviceNotificationClient.cpp" />
+    <ClCompile Include="VolumeNotificationClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioDevice.h" />
     <ClInclude Include="AudioDeviceManager.h" />
     <ClInclude Include="MMDeviceNotificationClient.h" />
+    <ClInclude Include="VolumeNotificationClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
