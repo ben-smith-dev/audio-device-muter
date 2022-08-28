@@ -9,7 +9,7 @@ private:
 	EDataFlow dataFlow;
 	IMMDeviceEnumerator* deviceEnumerator;
 
-	HRESULT CheckDeviceDataFlow(LPCWSTR deviceId, EDataFlow* dataFlow);
+	HRESULT CheckIfDeviceHasCorrectDataFlow(LPCWSTR deviceId, BOOL* isCorrectFlow);
 	HRESULT CreateEnumerator();
 
 public:
