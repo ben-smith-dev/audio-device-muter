@@ -28,6 +28,11 @@ AudioDevice::~AudioDevice()
 {
 	// De-increments the reference count of each interface.
 	ReleaseInterfaceReferences();
+
+	// Unregisters from volume notifications.
+	endpointVolume->UnregisterControlChangeNotify(
+		volumeNotificationClient
+	);
 }
 
 HRESULT AudioDevice::ConstructFrom(IMMDevice* mmDevice)
