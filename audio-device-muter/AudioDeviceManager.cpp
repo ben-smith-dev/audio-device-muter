@@ -2,7 +2,7 @@
 
 AudioDeviceManager::AudioDeviceManager()
 {
-	mmNotificationClient = new MMDeviceNotificationClient(DATA_FLOW);
+	mmNotificationClient = nullptr;
 }
 
 AudioDeviceManager::~AudioDeviceManager()
@@ -101,7 +101,7 @@ HRESULT AudioDeviceManager::GetDevices()
 {
 	HRESULT hr;
 
-	IMMDeviceEnumerator* deviceEnumerator = nullptr;
+	deviceEnumerator = nullptr;
 	IMMDeviceCollection* deviceCollection = nullptr;
 
 	// Device data.
@@ -124,6 +124,19 @@ HRESULT AudioDeviceManager::GetDevices()
 	);
 	if (FAILED(hr)) { return hr; }
 
+	mmNotificationClient = new MMDeviceNotificationClient(
+		deviceEnumerator,
+		EDataFlow::eCapture
+	);
+	if (FAILED(hr)) { return hr; }
+
+	deviceEnumerator->RegisterEndpointNotificationCallback(
+		mmNotificationClient
+	);
+	if (FAILED(hr)) { return hr; }
+
+	// Register for notifications.
+	//RegisterForMMDeviceNotifications();
 
 	// Get device collection from enumerator.
 	hr = deviceEnumerator->EnumAudioEndpoints(
@@ -194,9 +207,6 @@ HRESULT AudioDeviceManager::GetDevices()
 		props = nullptr;
 	}
 
-	deviceEnumerator->Release();
-	deviceEnumerator = nullptr;
-
 	deviceCollection->Release();
 	deviceCollection = nullptr;
 
@@ -263,17 +273,7 @@ HRESULT AudioDeviceManager::RegisterForMMDeviceNotifications()
 
 	HRESULT hr;
 
-	IMMDeviceEnumerator* deviceEnumerator;
-
-	//Create device enumerator.
-	hr = CoCreateInstance(
-		__uuidof(MMDeviceEnumerator),
-		NULL,
-		CLSCTX_ALL,
-		__uuidof(IMMDeviceEnumerator),
-		(LPVOID*)&deviceEnumerator
-	);
-	if (FAILED(hr)) { return hr; }
+	//if (mmNotificationClient == nullptr) { mmNotificationClient = new MMDeviceNotificationClient(DATA_FLOW); }
 
 	// Register for notifications.
 	hr = deviceEnumerator->RegisterEndpointNotificationCallback(

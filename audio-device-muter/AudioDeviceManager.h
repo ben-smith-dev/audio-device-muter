@@ -15,12 +15,15 @@ private:
 	std::vector<AudioDevice*> devices;
 
 	MMDeviceNotificationClient* mmNotificationClient;
+	IMMDeviceEnumerator* deviceEnumerator;
 
 	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
 
 public:
 	AudioDeviceManager();
 	~AudioDeviceManager();
+
+	HRESULT CreateEnumerator();
 
 	HRESULT RegisterForMMDeviceNotifications();
 	HRESULT UnregisterFromMMDeviceNotifications();
