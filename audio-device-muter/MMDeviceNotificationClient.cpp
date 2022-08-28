@@ -96,8 +96,13 @@ HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
     return hr;
 }
 
-HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(LPCWSTR deviceID, EDataFlow* flow)
+HRESULT MMDeviceNotificationClient::CheckIfDeviceHasCorrectDataFlow(
+    LPCWSTR deviceID, 
+    BOOL* isCorrectFlow
+)
 {
+    if (dataFlow == EDataFlow::eAll) { *isCorrectFlow = true; return S_OK; }
+
     HRESULT hr;
 
     if (deviceEnumerator == nullptr) 
@@ -116,7 +121,11 @@ HRESULT MMDeviceNotificationClient::CheckDeviceDataFlow(LPCWSTR deviceID, EDataF
     hr = device->QueryInterface(__uuidof(IMMEndpoint), (LPVOID*)&endpoint);
     if (FAILED(hr)) { device->Release(); return hr; }
 
-    hr = endpoint->GetDataFlow(flow);
+    EDataFlow deviceFlow;
+    hr = endpoint->GetDataFlow(&deviceFlow);
+
+    // Compare device data flow to MMDeviceNotificationClient data flow mask.
+    *isCorrectFlow = deviceFlow == dataFlow;
 
     device->Release();
     endpoint->Release();
