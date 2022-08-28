@@ -198,6 +198,26 @@ HRESULT AudioDeviceManager::PrintDevices()
 	return S_OK;
 }
 
+HRESULT AudioDeviceManager::MuteDevices()
+{
+
+}
+
+HRESULT AudioDeviceManager::UnmuteDevices()
+{
+
+}
+
+HRESULT AudioDeviceManager::MuteDevice(LPCWSTR* deviceID)
+{
+
+}
+
+HRESULT AudioDeviceManager::UnmuteDevice(LPCWSTR* deviceID)
+{
+
+}
+
 HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
 {
 	HRESULT hr = S_OK;

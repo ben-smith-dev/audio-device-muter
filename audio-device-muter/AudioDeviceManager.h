@@ -23,15 +23,18 @@ public:
 	AudioDeviceManager();
 	~AudioDeviceManager();
 
-	HRESULT CreateEnumerator();
-
 	HRESULT RegisterForMMDeviceNotifications();
 	HRESULT UnregisterFromMMDeviceNotifications();
 
 	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPCWSTR* deviceId);
 
-	HRESULT GetDefaultAudioDevice(AudioDevice* defaultDevice);
+	HRESULT MuteDevices();
+	HRESULT UnmuteDevices();
+
+	HRESULT MuteDevice(LPCWSTR* deviceID);
+	HRESULT UnmuteDevice(LPCWSTR* deviceID);
+
 	HRESULT GetDefaultAudioDevice();
 
 	HRESULT GetDevices();
