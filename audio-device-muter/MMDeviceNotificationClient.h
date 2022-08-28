@@ -16,7 +16,7 @@ private:
 	HRESULT PrintDeviceName(LPCWSTR* deviceID);
 
 public:
-	MMDeviceNotificationClient(EDataFlow dataFlow);
+	MMDeviceNotificationClient(IMMDeviceEnumerator* deviceEnumerator, EDataFlow dataFlow);
 	~MMDeviceNotificationClient();
 
 	// IUnknown methods

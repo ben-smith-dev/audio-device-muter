@@ -1,10 +1,13 @@
 #include "MMDeviceNotificationClient.h"
 
-MMDeviceNotificationClient::MMDeviceNotificationClient(EDataFlow flow)
+MMDeviceNotificationClient::MMDeviceNotificationClient(
+    IMMDeviceEnumerator* deviceEnumerator, 
+    EDataFlow flow)
 {
     this->cRef = 1;
-    this->deviceEnumerator = nullptr;
+    this->deviceEnumerator = deviceEnumerator;
     this->dataFlow = flow;
+
 }
 
 MMDeviceNotificationClient::~MMDeviceNotificationClient()
@@ -210,7 +213,7 @@ HRESULT MMDeviceNotificationClient::PrintDeviceName(LPCWSTR* deviceID)
         return hr;
     }
 
-    printf("Device Name:\t\t%S", friendlyName.pwszVal);
+    printf("Device Name:\t\t%S\n", friendlyName.pwszVal);
 
     return hr;
 }
