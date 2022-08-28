@@ -80,13 +80,25 @@ int wmain(int argc, wchar_t* argv[])
 		lstrcmpW(COMMAND_SPECIFIER, L"mute") == 0)
 	{
 		// Mute devices.
+		hr = deviceManager->MuteDevices();
+		if (FAILED(hr)) { return 1; }
+
+		// Print to show states.
+		hr = deviceManager->PrintDevices();
+		if (FAILED(hr)) { return 1; }
 	}
 
 	// UNMUTE
 	else if (lstrcmpW(COMMAND_SPECIFIER, L"-u") == 0 ||
 		lstrcmpW(COMMAND_SPECIFIER, L"unmute") == 0)
 	{
-		// unMute devices.
+		// Unmute devices.
+		hr = deviceManager->UnmuteDevices();
+		if (FAILED(hr)) { return 1; }
+
+		// Print to show states.
+		hr = deviceManager->PrintDevices();
+		if (FAILED(hr)) { return 1; }
 	}
 
 	// OBSERVE
