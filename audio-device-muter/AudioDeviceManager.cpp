@@ -181,6 +181,18 @@ HRESULT AudioDeviceManager::GetDevice(LPCWSTR* deviceID)
 	);
 	if (FAILED(hr)) { return hr; }
 
+	// Create MMNotificationClient
+	mmNotificationClient = new MMDeviceNotificationClient(
+		deviceEnumerator,
+		EDataFlow::eCapture
+	);
+	if (FAILED(hr)) { return hr; }
+
+	// Register for notifications.
+	deviceEnumerator->RegisterEndpointNotificationCallback(
+		mmNotificationClient
+	);
+
 	hr = deviceEnumerator->GetDevice(*deviceID, &mmDevice);
 	if (FAILED(hr)) { return hr; }
 
@@ -188,6 +200,10 @@ HRESULT AudioDeviceManager::GetDevice(LPCWSTR* deviceID)
 
 	mmDevice->AddRef();
 	hr = devices.back()->ConstructFrom(mmDevice);
+	if (FAILED(hr)) { mmDevice->Release(); return hr; }
+
+	hr = devices.back()->RegisterForVolumeNotifications();
+	if (FAILED(hr)) { mmDevice->Release(); return hr; }
 
 	mmDevice->Release();
 	mmDevice = nullptr;
