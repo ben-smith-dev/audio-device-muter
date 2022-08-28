@@ -214,6 +214,8 @@ HRESULT AudioDeviceManager::PrintDevices()
 	for (auto& mmDevice : devices) {;
 		hr = mmDevice->Print();
 		if (FAILED(hr)) { return hr; }
+
+		printf("\n");
 	}
 
 	return S_OK;
