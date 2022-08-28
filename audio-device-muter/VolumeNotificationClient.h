@@ -1,6 +1,7 @@
 #pragma once
 
 #include <endpointvolume.h>
+#include <stdio.h>
 
 class VolumeNotificationClient : public IAudioEndpointVolumeCallback
 {
