@@ -246,3 +246,29 @@ HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
 
 	return hr;
 }
+
+HRESULT AudioDeviceManager::RegisterForMMDeviceNotifications()
+{
+	if (mmNotificationClient != nullptr) { return S_OK; }
+
+	HRESULT hr;
+
+	IMMDeviceEnumerator* deviceEnumerator;
+
+	//Create device enumerator.
+	hr = CoCreateInstance(
+		__uuidof(MMDeviceEnumerator),
+		NULL,
+		CLSCTX_ALL,
+		__uuidof(IMMDeviceEnumerator),
+		(LPVOID*)&deviceEnumerator
+	);
+	if (FAILED(hr)) { return hr; }
+
+	// Register for notifications.
+	hr = deviceEnumerator->RegisterEndpointNotificationCallback(
+		mmNotificationClient
+	);
+
+	return hr;
+}
