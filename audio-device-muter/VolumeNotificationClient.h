@@ -25,6 +25,6 @@ public:
 
 	// IAudioEndpointVolumeCallback method
 
-	int OnNotify();
+	HRESULT OnNotify(PAUDIO_VOLUME_NOTIFICATION_DATA notify);
 };
 
