@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AudioDevice.h"
+#include "MMDeviceNotificationClient.h"
 
 #include <vector>
 #include <mmdeviceapi.h>
@@ -12,6 +13,10 @@ private:
 	CONST EDataFlow DATA_FLOW = EDataFlow::eCapture;
 
 	std::vector<AudioDevice*> devices;
+
+	MMDeviceNotificationClient* mmNotificationClient;
+
+	HRESULT RegisterForMMDeviceNotifications();
 
 	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
 
