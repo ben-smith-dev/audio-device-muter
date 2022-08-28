@@ -10,6 +10,7 @@ private:
 	IMMDeviceEnumerator* deviceEnumerator;
 
 	HRESULT CheckDeviceDataFlow(LPCWSTR deviceId, EDataFlow* dataFlow);
+	HRESULT CreateEnumerator();
 
 public:
 	MMDeviceNotificationClient(EDataFlow dataFlow);
