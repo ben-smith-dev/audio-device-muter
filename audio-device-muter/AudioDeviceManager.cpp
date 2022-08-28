@@ -17,7 +17,7 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	IMMDeviceEnumerator* deviceEnumerator = nullptr;
 
 	// Device data.
-	IMMDevice* device = nullptr;
+	IMMDevice* mmDevice = nullptr;
 	IPropertyStore* props = nullptr;
 	IAudioEndpointVolume* endpointVolume = nullptr;
 	LPWSTR pwszID = NULL;
@@ -40,19 +40,19 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	deviceEnumerator->GetDefaultAudioEndpoint(
 		DATA_FLOW,
 		ERole::eConsole,
-		&device
+		&mmDevice
 	);
 	if (FAILED(hr)) { return hr; }
 	
 	// Check if a device was found, return is not
-	if (device == nullptr) { return S_OK;  }
+	if (mmDevice == nullptr) { return S_OK;  }
 
 	// Get device unique 
-	hr = device->GetId(&pwszID);
+	hr = mmDevice->GetId(&pwszID);
 	if (FAILED(hr)) { return hr; }
 
 	// Get audi0 endpoint volume
-	hr = device->Activate(
+	hr = mmDevice->Activate(
 		__uuidof(IAudioEndpointVolume),
 		CLSCTX_ALL,
 		NULL,
@@ -61,27 +61,27 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	if (FAILED(hr)) { return hr; }
 
 	//Gets pointer to device properties
-	hr = device->OpenPropertyStore(
+	hr = mmDevice->OpenPropertyStore(
 		STGM_READ,
 		&props
 	);
 	if (FAILED(hr)) { return hr; }
 
 	// Increment reference count to interfaces
-	device->AddRef();
+	mmDevice->AddRef();
 	endpointVolume->AddRef();
 	props->AddRef();
 
 	// Push audio device to decices vector.
 	devices.push_back(new AudioDevice(
-		device,
+		mmDevice,
 		endpointVolume,
 		props
 	));
 
 	// Release interface pointers;
-	device->Release();
-	device = nullptr;
+	mmDevice->Release();
+	mmDevice = nullptr;
 
 	endpointVolume->Release();
 	endpointVolume = nullptr;
@@ -105,7 +105,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	IMMDeviceCollection* deviceCollection = nullptr;
 
 	// Device data.
-	IMMDevice* device = nullptr;
+	IMMDevice* mmDevice = nullptr;
 	IPropertyStore* props = nullptr;
 	IAudioEndpointVolume* endpointVolume = nullptr;
 	LPCWSTR deviceID = NULL;
@@ -153,13 +153,13 @@ HRESULT AudioDeviceManager::GetDevices()
 
 	for (UINT i = 0; i < deviceCount; i += 1)
 	{
-		device = nullptr;
-		hr = deviceCollection->Item(i, &device);
+		mmDevice = nullptr;
+		hr = deviceCollection->Item(i, &mmDevice);
 		if (FAILED(hr)) { return hr; }
 
 		// Get device unique 
 		deviceID = nullptr;
-		hr = device->GetId((LPWSTR*)&deviceID);
+		hr = mmDevice->GetId((LPWSTR*)&deviceID);
 		if (FAILED(hr)) { return hr; }
 
 		BOOL inMap = false;;
@@ -168,7 +168,7 @@ HRESULT AudioDeviceManager::GetDevices()
 
 		// Get audio endpoint volume
 		endpointVolume = nullptr;
-		hr = device->Activate(
+		hr = mmDevice->Activate(
 			__uuidof(IAudioEndpointVolume),
 			CLSCTX_ALL,
 			NULL,
@@ -178,20 +178,20 @@ HRESULT AudioDeviceManager::GetDevices()
 
 		//Gets pointer to device properties
 		props = nullptr;
-		hr = device->OpenPropertyStore(
+		hr = mmDevice->OpenPropertyStore(
 			STGM_READ,
 			&props
 		);
 		if (FAILED(hr)) { return hr; }
 
 		// Increment reference count to interfaces
-		device->AddRef();
+		mmDevice->AddRef();
 		endpointVolume->AddRef();
 		props->AddRef();
 
 		// Push audio device to map
 		devices.push_back(new AudioDevice(
-			device,
+			mmDevice,
 			endpointVolume,
 			props
 		));
@@ -202,8 +202,8 @@ HRESULT AudioDeviceManager::GetDevices()
 		if (FAILED(hr)) { return hr; }
 
 		// Release interface pointers;
-		device->Release();
-		device = nullptr;
+		mmDevice->Release();
+		mmDevice = nullptr;
 
 		endpointVolume->Release();
 		endpointVolume = nullptr;
@@ -224,9 +224,9 @@ HRESULT AudioDeviceManager::CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap)
 {
 	HRESULT hr = S_OK;
 
-	for (auto& device : devices) {
+	for (auto& mmDevice : devices) {
 		LPWSTR otherID = nullptr;
-		hr = device->GetMMDeviceID(&otherID);
+		hr = mmDevice->GetMMDeviceID(&otherID);
 		if (FAILED(hr)) { return hr; }
 
 		// Compares the two IDs, if equal to 0, they are equal.
@@ -244,8 +244,8 @@ HRESULT AudioDeviceManager::PrintDevices()
 {
 	HRESULT hr;
 
-	for (auto& device : devices) {;
-		hr = device->Print();
+	for (auto& mmDevice : devices) {;
+		hr = mmDevice->Print();
 		if (FAILED(hr)) { return hr; }
 	}
 
@@ -256,15 +256,15 @@ HRESULT AudioDeviceManager::PrintDevice(LPCWSTR* deviceID)
 {
 	HRESULT hr = S_OK;
 
-	for (auto& device : devices) {
+	for (auto& mmDevice : devices) {
 		LPWSTR otherID = nullptr;
-		hr = device->GetMMDeviceID(&otherID);
+		hr = mmDevice->GetMMDeviceID(&otherID);
 		if (FAILED(hr)) { return hr; }
 
 		// Compares the two IDs, if equal to 0 they are equal.
 		if (lstrcmpW(*deviceID, otherID) == 0)
 		{
-			device->Print();
+			mmDevice->Print();
 			return S_OK;
 		}
 	}

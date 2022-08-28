@@ -10,7 +10,7 @@
 class AudioDevice
 {
 private:
-	IMMDevice* device;
+	IMMDevice* mmDevice;
 	IAudioEndpointVolume* endpointVolume;
 	IPropertyStore* props;
 	VolumeNotificationClient* volumeNotificationClient;
@@ -19,14 +19,14 @@ public:
 	AudioDevice();
 
 	AudioDevice(
-		IMMDevice* device,
+		IMMDevice* mmDevice,
 		IAudioEndpointVolume* endpointVolume,
 		IPropertyStore* props
 	);
 
 	~AudioDevice();
 
-	HRESULT ConstructFrom(IMMDevice* device);
+	HRESULT ConstructFrom(IMMDevice* mmDevice);
 
 	HRESULT GetFriendlyName(PROPVARIANT& deviceFriendlyname);
 	HRESULT GetMMDeviceID(LPWSTR* deviceID);

@@ -155,14 +155,14 @@ HRESULT MMDeviceNotificationClient::CheckIfDeviceHasCorrectDataFlow(
     }
 
     // Get device using ID.
-    IMMDevice* device = nullptr;
-    hr = deviceEnumerator->GetDevice(deviceID, &device);
+    IMMDevice* mmDevice = nullptr;
+    hr = deviceEnumerator->GetDevice(deviceID, &mmDevice);
     if (FAILED(hr)) { return hr; }
 
     // Get endpoint from querying device interfaces.
     IMMEndpoint* endpoint = nullptr;
-    hr = device->QueryInterface(__uuidof(IMMEndpoint), (LPVOID*)&endpoint);
-    if (FAILED(hr)) { device->Release(); return hr; }
+    hr = mmDevice->QueryInterface(__uuidof(IMMEndpoint), (LPVOID*)&endpoint);
+    if (FAILED(hr)) { mmDevice->Release(); return hr; }
 
     EDataFlow deviceFlow;
     hr = endpoint->GetDataFlow(&deviceFlow);
@@ -170,7 +170,7 @@ HRESULT MMDeviceNotificationClient::CheckIfDeviceHasCorrectDataFlow(
     // Compare device data flow to MMDeviceNotificationClient data flow mask.
     *isCorrectFlow = deviceFlow == dataFlow;
 
-    device->Release();
+    mmDevice->Release();
     endpoint->Release();
 
     return hr;
@@ -186,20 +186,20 @@ HRESULT MMDeviceNotificationClient::PrintDeviceName(LPCWSTR* deviceID)
         if (FAILED(hr)) { return hr; }
     }
 
-    IMMDevice* device = nullptr;
+    IMMDevice* mmDevice = nullptr;
     IPropertyStore* props = nullptr;
     PROPVARIANT friendlyName;
 
     // Get device.
-    hr = deviceEnumerator->GetDevice(*deviceID, &device);
+    hr = deviceEnumerator->GetDevice(*deviceID, &mmDevice);
     if (FAILED(hr)) { return hr; }
 
     //Get device props.
-    hr = device->OpenPropertyStore(
+    hr = mmDevice->OpenPropertyStore(
         STGM_READ,
         &props
     );
-    if (FAILED(hr)) { device->Release(); return hr; }
+    if (FAILED(hr)) { mmDevice->Release(); return hr; }
 
     //	Get device friendly name property
     PropVariantInit(&friendlyName);
@@ -208,7 +208,7 @@ HRESULT MMDeviceNotificationClient::PrintDeviceName(LPCWSTR* deviceID)
         &friendlyName
     );
     if (FAILED(hr)) {
-        device->Release();
+        mmDevice->Release();
         props->Release();
         return hr;
     }

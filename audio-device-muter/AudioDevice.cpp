@@ -5,7 +5,7 @@
 
 AudioDevice::AudioDevice()
 {
-	this->device = nullptr;
+	this->mmDevice = nullptr;
 	this->endpointVolume = nullptr;
 	this->props = nullptr;
 
@@ -13,12 +13,12 @@ AudioDevice::AudioDevice()
 }
 
 AudioDevice::AudioDevice(
-	IMMDevice* device,
+	IMMDevice* mmDevice,
 	IAudioEndpointVolume* endpointVolume,
 	IPropertyStore* props
 )
 {
-	this->device = device;
+	this->mmDevice = mmDevice;
 	this->endpointVolume = endpointVolume;
 	this->props = props;
 	this->volumeNotificationClient = new VolumeNotificationClient(FALSE);
@@ -36,7 +36,7 @@ HRESULT AudioDevice::ConstructFrom(IMMDevice* mmDevice)
 
 	HRESULT hr;
 
-	this->device = mmDevice;
+	this->mmDevice = mmDevice;
 
 	// Get endpointVolume interface pointer.
 	hr = mmDevice->Activate(
@@ -48,7 +48,7 @@ HRESULT AudioDevice::ConstructFrom(IMMDevice* mmDevice)
 	if (FAILED(hr)) { return hr; }
 
 	//Gets pointer to device properties.
-	hr = device->OpenPropertyStore(
+	hr = mmDevice->OpenPropertyStore(
 		STGM_READ,
 		&props
 	);
@@ -76,7 +76,7 @@ HRESULT AudioDevice::GetFriendlyName(PROPVARIANT& varDeviceName)
 
 HRESULT AudioDevice::GetState(DWORD* deviceState) 
 {
-	HRESULT hr = device->GetState(deviceState);
+	HRESULT hr = mmDevice->GetState(deviceState);
 
 	return hr;
 }
@@ -100,7 +100,7 @@ HRESULT AudioDevice::GetMMDeviceID(LPWSTR* deviceID)
 {
 	HRESULT hr;
 
-	hr = device->GetId(deviceID);
+	hr = mmDevice->GetId(deviceID);
 
 	return hr;
 }
@@ -117,7 +117,7 @@ HRESULT AudioDevice::Print()
 
 	// Get the devices unique ID.
 	LPWSTR deviceID = new WCHAR;
-	hr = device->GetId(&deviceID);
+	hr = mmDevice->GetId(&deviceID);
 	if (FAILED(hr)) { return hr; }
 
 	// Get the devices state
@@ -176,11 +176,11 @@ HRESULT AudioDevice::UnregisterFromVolumeNotifications()
 
 int AudioDevice::ReleaseInterfaceReferences()
 {
-	if (device != nullptr) device->Release();
+	if (mmDevice != nullptr) mmDevice->Release();
 	if (endpointVolume != nullptr) endpointVolume->Release();
 	if (props != nullptr) props->Release();
 
-	device = nullptr;
+	mmDevice = nullptr;
 	endpointVolume = nullptr;
 	props = nullptr;
 
