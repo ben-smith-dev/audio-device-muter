@@ -42,3 +42,20 @@ HRESULT VolumeNotificationClient::QueryInterface(
 	}
 	return S_OK;
 }
+
+HRESULT VolumeNotificationClient::OnNotify(PAUDIO_VOLUME_NOTIFICATION_DATA notify)
+{
+	if (lastMuteState != notify->bMuted) { 
+		lastMuteState = notify->bMuted;
+
+		printf("Mute state changed:\t\t%s\n", notify->bMuted ? "MUTED" : "UN-MUTED");
+	}
+
+	if (channelAmount != notify->nChannels)
+	{
+		channelAmount = notify->nChannels;
+		printf("Channel Amount Changed:\t\t%i\n", notify->nChannels);
+	}
+
+	return S_OK;
+}
