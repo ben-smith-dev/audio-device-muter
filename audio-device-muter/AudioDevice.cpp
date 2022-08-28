@@ -73,7 +73,7 @@ HRESULT AudioDevice::GetFriendlyName(PROPVARIANT& varDeviceName)
 		&varName
 	);
 
-	PropVariantCopy(&varDeviceName, &varName);
+	hr = PropVariantCopy(&varDeviceName, &varName);
 	
 	PropVariantClear(&varName);
 	return hr;
