@@ -56,12 +56,28 @@ HRESULT MMDeviceNotificationClient::OnDeviceAdded(LPCWSTR deviceID)
 {
     HRESULT hr;
 
+    BOOL isCorrectFlow;
+    hr = CheckIfDeviceHasCorrectDataFlow(deviceID, &isCorrectFlow);
+    if (FAILED(hr)) { return hr; }
+    if (!isCorrectFlow) { return S_OK; }
+
+    hr = PrintDeviceName(&deviceID);
+    if (FAILED(hr)) { return hr; }
+
     return hr;
 }
 
 HRESULT MMDeviceNotificationClient::OnDeviceRemoved(LPCWSTR deviceID)
 {
     HRESULT hr;
+
+    BOOL isCorrectFlow;
+    hr = CheckIfDeviceHasCorrectDataFlow(deviceID, &isCorrectFlow);
+    if (FAILED(hr)) { return hr; }
+    if (!isCorrectFlow) { return S_OK; }
+
+    hr = PrintDeviceName(&deviceID);
+    if (FAILED(hr)) { return hr; }
 
     return hr;
 }
@@ -73,6 +89,14 @@ HRESULT MMDeviceNotificationClient::OnDefaultDeviceChanged(
 {
     HRESULT hr;
 
+    BOOL isCorrectFlow;
+    hr = CheckIfDeviceHasCorrectDataFlow(deviceID, &isCorrectFlow);
+    if (FAILED(hr)) { return hr; }
+    if (!isCorrectFlow) { return S_OK; }
+
+    hr = PrintDeviceName(&deviceID);
+    if (FAILED(hr)) { return hr; }
+
     return hr;
 }
 
@@ -83,15 +107,31 @@ HRESULT MMDeviceNotificationClient::OnDeviceStateChanged(
 {
     HRESULT hr;
 
+    BOOL isCorrectFlow;
+    hr = CheckIfDeviceHasCorrectDataFlow(deviceID, &isCorrectFlow);
+    if (FAILED(hr)) { return hr; }
+    if (!isCorrectFlow) { return S_OK; }
+
+    hr = PrintDeviceName(&deviceID);
+    if (FAILED(hr)) { return hr; }
+
     return hr;
 }
 
 HRESULT MMDeviceNotificationClient::OnPropertyValueChanged(
-    LPCWSTR deviceId,
+    LPCWSTR deviceID,
     const PROPERTYKEY propKey
 )
 {
     HRESULT hr;
+
+    BOOL isCorrectFlow;
+    hr = CheckIfDeviceHasCorrectDataFlow(deviceID, &isCorrectFlow);
+    if (FAILED(hr)) { return hr; }
+    if (!isCorrectFlow) { return S_OK; }
+
+    hr = PrintDeviceName(&deviceID);
+    if (FAILED(hr)) { return hr; }
 
     return hr;
 }
