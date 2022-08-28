@@ -1,5 +1,15 @@
 #include "AudioDeviceManager.h"
 
+AudioDeviceManager::AudioDeviceManager()
+{
+	mmNotificationClient = new MMDeviceNotificationClient(DATA_FLOW);
+}
+
+AudioDeviceManager::~AudioDeviceManager()
+{
+	UnregisterFromMMDeviceNotifications();
+}
+
 HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 {
 	HRESULT hr;

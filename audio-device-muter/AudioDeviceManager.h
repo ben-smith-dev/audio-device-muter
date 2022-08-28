@@ -22,6 +22,9 @@ private:
 	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
 
 public:
+	AudioDeviceManager();
+	~AudioDeviceManager();
+
 	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPCWSTR* deviceId);
 
