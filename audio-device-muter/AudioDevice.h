@@ -32,5 +32,8 @@ public:
 
 	HRESULT Print();
 
+	HRESULT RegisterForVolumeNotifications();
+	HRESULT UnregisterFromVolumeNotifications();
+
 	int ReleaseInterfaceReferences();
 };

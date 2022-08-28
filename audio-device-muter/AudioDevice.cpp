@@ -115,6 +115,28 @@ HRESULT AudioDevice::Print()
 	return S_OK;
 }
 
+HRESULT AudioDevice::RegisterForVolumeNotifications()
+{
+	HRESULT hr;
+
+	hr = endpointVolume->RegisterControlChangeNotify(
+		volumeNotificationClient
+	);
+
+	return hr;
+}
+
+HRESULT AudioDevice::UnregisterFromVolumeNotifications()
+{
+	HRESULT hr;
+
+	hr = endpointVolume->UnregisterControlChangeNotify(
+		volumeNotificationClient
+	);
+
+	return hr;
+}
+
 int AudioDevice::ReleaseInterfaceReferences()
 {
 	device->Release();
