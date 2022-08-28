@@ -3,7 +3,7 @@
 - list -l 
 - mute -m
 - umute -u
-- obersve - o
+- obersve -o
 
 # Device Specifier
 - default -d
