@@ -53,16 +53,8 @@ int wmain(int argc, wchar_t* argv[])
 
 	// SINGLE DEVICE (IF valid ID)
 	else {
-		hr = deviceManager->GetDevices();
+		hr = deviceManager->GetDevice((LPCWSTR*)&DEVICE_SPECIFIER);
 		if (FAILED(hr)) { return 1; }
-
-		printf("Getting all devices to search for one.");
-		
-		// Check if it can get device from ID.
-		hr = deviceManager->PrintDevice((LPCWSTR*)&DEVICE_SPECIFIER);
-		if (FAILED(hr)) { printf("FAILED\n"); return 1; }
-
-		return 0;
 	}
 
 	// Process command modifier.
