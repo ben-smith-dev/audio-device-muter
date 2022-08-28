@@ -106,8 +106,6 @@ HRESULT AudioDeviceManager::GetDevices()
 
 	// Device data.
 	IMMDevice* mmDevice = nullptr;
-	IPropertyStore* props = nullptr;
-	IAudioEndpointVolume* endpointVolume = nullptr;
 	LPCWSTR deviceID = NULL;
 
 	// Initialize COM interface.
@@ -135,9 +133,6 @@ HRESULT AudioDeviceManager::GetDevices()
 	);
 	if (FAILED(hr)) { return hr; }
 
-	// Register for notifications.
-	//RegisterForMMDeviceNotifications();
-
 	// Get device collection from enumerator.
 	hr = deviceEnumerator->EnumAudioEndpoints(
 		DATA_FLOW,
@@ -146,7 +141,7 @@ HRESULT AudioDeviceManager::GetDevices()
 	);
 	if (FAILED(hr)) { return hr; }
 
-	// Get number of devics in collection.
+	// Get number of devices in collection.
 	UINT deviceCount = 0;
 	hr = deviceCollection->GetCount(&deviceCount);
 	if (FAILED(hr)) { return hr; }
@@ -157,7 +152,7 @@ HRESULT AudioDeviceManager::GetDevices()
 		hr = deviceCollection->Item(i, &mmDevice);
 		if (FAILED(hr)) { return hr; }
 
-		// Get device unique 
+		// Get device unique ID.
 		deviceID = nullptr;
 		hr = mmDevice->GetId((LPWSTR*)&deviceID);
 		if (FAILED(hr)) { return hr; }
@@ -166,50 +161,21 @@ HRESULT AudioDeviceManager::GetDevices()
 		hr = CheckIfDeviceInMap(&deviceID, &inMap);
 		if (inMap) { continue; }
 
-		// Get audio endpoint volume
-		endpointVolume = nullptr;
-		hr = mmDevice->Activate(
-			__uuidof(IAudioEndpointVolume),
-			CLSCTX_ALL,
-			NULL,
-			(LPVOID*)&endpointVolume
-		);
-		if (FAILED(hr)) { return hr; }
+		// Push audio device to vector.
+		devices.push_back(new AudioDevice());
 
-		//Gets pointer to device properties
-		props = nullptr;
-		hr = mmDevice->OpenPropertyStore(
-			STGM_READ,
-			&props
-		);
-		if (FAILED(hr)) { return hr; }
-
-		// Increment reference count to interfaces
+		// Increment ref count to interface.
 		mmDevice->AddRef();
-		endpointVolume->AddRef();
-		props->AddRef();
 
-		// Push audio device to map
-		devices.push_back(new AudioDevice(
-			mmDevice,
-			endpointVolume,
-			props
-		));
+		hr = devices.back()->ConstructFrom(mmDevice);
+		if (FAILED(hr)) { return hr; }
 
 		// Regiseter for volume change notifications.
 		hr = devices.back()->RegisterForVolumeNotifications();
-		
 		if (FAILED(hr)) { return hr; }
 
-		// Release interface pointers;
 		mmDevice->Release();
 		mmDevice = nullptr;
-
-		endpointVolume->Release();
-		endpointVolume = nullptr;
-
-		props->Release();
-		props = nullptr;
 	}
 
 	deviceCollection->Release();
