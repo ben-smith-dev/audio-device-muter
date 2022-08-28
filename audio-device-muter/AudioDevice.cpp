@@ -23,7 +23,11 @@ AudioDevice::~AudioDevice()
 
 HRESULT AudioDevice::ConstructFrom(IMMDevice* mmDevice)
 {
+	if (mmDevice == nullptr) return E_POINTER;
+
 	HRESULT hr;
+
+	this->device = mmDevice;
 
 	// Get endpointVolume interface pointer.
 	hr = mmDevice->Activate(
