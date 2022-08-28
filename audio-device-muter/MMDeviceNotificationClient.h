@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stdio.h>
 #include <mmdeviceapi.h>
+#include <Functiondiscoverykeys_devpkey.h>
 
 class MMDeviceNotificationClient : public IMMNotificationClient
 {
@@ -11,6 +13,7 @@ private:
 
 	HRESULT CheckIfDeviceHasCorrectDataFlow(LPCWSTR deviceId, BOOL* isCorrectFlow);
 	HRESULT CreateEnumerator();
+	HRESULT PrintDeviceName(LPCWSTR* deviceID);
 
 public:
 	MMDeviceNotificationClient(EDataFlow dataFlow);

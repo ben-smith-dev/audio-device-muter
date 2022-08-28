@@ -133,6 +133,48 @@ HRESULT MMDeviceNotificationClient::CheckIfDeviceHasCorrectDataFlow(
     return hr;
 }
 
+HRESULT MMDeviceNotificationClient::PrintDeviceName(LPCWSTR* deviceID) 
+{
+    HRESULT hr;
+
+    if (deviceEnumerator == nullptr) 
+    {
+        hr = CreateEnumerator();
+        if (FAILED(hr)) { return hr; }
+    }
+
+    IMMDevice* device = nullptr;
+    IPropertyStore* props = nullptr;
+    PROPVARIANT friendlyName;
+
+    // Get device.
+    hr = deviceEnumerator->GetDevice(*deviceID, &device);
+    if (FAILED(hr)) { return hr; }
+
+    //Get device props.
+    hr = device->OpenPropertyStore(
+        STGM_READ,
+        &props
+    );
+    if (FAILED(hr)) { device->Release(); return hr; }
+
+    //	Get device friendly name property
+    PropVariantInit(&friendlyName);
+    hr = props->GetValue(
+        PKEY_Device_FriendlyName,
+        &friendlyName
+    );
+    if (FAILED(hr)) {
+        device->Release();
+        props->Release();
+        return hr;
+    }
+
+    printf("Device Name:\t\t%S", friendlyName.pwszVal);
+
+    return hr;
+}
+
 HRESULT MMDeviceNotificationClient::CreateEnumerator()
 {
     HRESULT hr;
