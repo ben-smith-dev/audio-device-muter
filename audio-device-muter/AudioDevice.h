@@ -1,5 +1,7 @@
 #pragma once
 
+#include "VolumeNotificationClient.h"
+
 #include <windows.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
@@ -11,6 +13,7 @@ private:
 	IMMDevice* device;
 	IAudioEndpointVolume* endpointVolume;
 	IPropertyStore* props;
+	VolumeNotificationClient* volumeNotificationClient;
 
 public:
 	AudioDevice(
