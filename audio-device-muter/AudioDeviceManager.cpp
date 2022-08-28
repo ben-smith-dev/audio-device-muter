@@ -15,27 +15,33 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 {
 	HRESULT hr;
 
-	IMMDeviceEnumerator* deviceEnumerator = nullptr;
+	//Create device enumerator if needed.
+	if (deviceEnumerator == nullptr) 
+	{
+		hr = CoCreateInstance(
+			__uuidof(MMDeviceEnumerator),
+			NULL,
+			CLSCTX_ALL,
+			__uuidof(IMMDeviceEnumerator),
+			(LPVOID*)&deviceEnumerator
+		);
+		if (FAILED(hr)) { return hr; }
+
+		// Register for MM Device notifications.
+		mmNotificationClient = new MMDeviceNotificationClient(
+			deviceEnumerator,
+			EDataFlow::eCapture
+		);
+		if (FAILED(hr)) { return hr; }
+
+		deviceEnumerator->RegisterEndpointNotificationCallback(
+			mmNotificationClient
+		);
+		if (FAILED(hr)) { return hr; }
+	}
 
 	// Device data.
 	IMMDevice* mmDevice = nullptr;
-	IPropertyStore* props = nullptr;
-	IAudioEndpointVolume* endpointVolume = nullptr;
-	LPWSTR pwszID = NULL;
-
-	// Initialize COM interface.
-	hr = CoInitializeEx(nullptr, tagCOINIT::COINIT_APARTMENTTHREADED);
-	if (FAILED(hr)) { return hr; }
-
-	//Create device enumerator.
-	hr = CoCreateInstance(
-		__uuidof(MMDeviceEnumerator),
-		NULL,
-		CLSCTX_ALL,
-		__uuidof(IMMDeviceEnumerator),
-		(LPVOID*)&deviceEnumerator
-	);
-	if (FAILED(hr)) { return hr; }
 
 	// Gets default audio endpoint
 	deviceEnumerator->GetDefaultAudioEndpoint(
@@ -46,52 +52,23 @@ HRESULT AudioDeviceManager::GetDefaultAudioDevice()
 	if (FAILED(hr)) { return hr; }
 	
 	// Check if a device was found, return is not
-	if (mmDevice == nullptr) { return S_OK;  }
-
-	// Get device unique 
-	hr = mmDevice->GetId(&pwszID);
-	if (FAILED(hr)) { return hr; }
-
-	// Get audi0 endpoint volume
-	hr = mmDevice->Activate(
-		__uuidof(IAudioEndpointVolume),
-		CLSCTX_ALL,
-		NULL,
-		(LPVOID*)&endpointVolume
-	);
-	if (FAILED(hr)) { return hr; }
-
-	//Gets pointer to device properties
-	hr = mmDevice->OpenPropertyStore(
-		STGM_READ,
-		&props
-	);
-	if (FAILED(hr)) { return hr; }
+	if (mmDevice == nullptr) { return E_POINTER;  }
 
 	// Increment reference count to interfaces
 	mmDevice->AddRef();
-	endpointVolume->AddRef();
-	props->AddRef();
 
 	// Push audio device to decices vector.
-	devices.push_back(new AudioDevice(
-		mmDevice,
-		endpointVolume,
-		props
-	));
+	devices.push_back(new AudioDevice());
+
+	hr = devices.back()->ConstructFrom(mmDevice);
+	if (FAILED(hr)) { return 1; }
+
+	hr = devices.back()->RegisterForVolumeNotifications();
+	if (FAILED(hr)) { return 1; }
 
 	// Release interface pointers;
 	mmDevice->Release();
 	mmDevice = nullptr;
-
-	endpointVolume->Release();
-	endpointVolume = nullptr;
-
-	props->Release();
-	props = nullptr;
-
-	deviceEnumerator->Release();
-	deviceEnumerator = nullptr;
 
 	CoUninitialize();
 
