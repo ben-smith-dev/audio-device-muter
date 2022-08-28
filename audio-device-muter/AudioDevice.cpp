@@ -12,6 +12,7 @@ AudioDevice::AudioDevice(
 	this->device = device;
 	this->endpointVolume = endpointVolume;
 	this->props = props;
+	this->volumeNotificationClient = new VolumeNotificationClient(FALSE);
 }
 
 AudioDevice::~AudioDevice()
