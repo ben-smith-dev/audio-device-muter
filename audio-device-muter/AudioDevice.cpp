@@ -163,9 +163,9 @@ HRESULT AudioDevice::UnregisterFromVolumeNotifications()
 
 int AudioDevice::ReleaseInterfaceReferences()
 {
-	device->Release();
-	endpointVolume->Release();
-	props->Release();
+	if (device != nullptr) device->Release();
+	if (endpointVolume != nullptr) endpointVolume->Release();
+	if (props != nullptr) props->Release();
 
 	device = nullptr;
 	endpointVolume = nullptr;
