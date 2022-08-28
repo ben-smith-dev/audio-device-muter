@@ -3,12 +3,23 @@
 #include <stdio.h>
 #include <string>
 
-int main(int argc, char* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
 	if (argc != 3) 
 	{
 		printf("Please input a valid command and device option.\n");
-		return 1; 
+
+		for (int i = 1; i < argc; i += 1)
+		{
+			printf("ARG:\t%S\n", argv[i]);
+		}
+
+		return 1;
+	}
+
+	for (int i = 1; i < argc; i += 1)
+	{
+		printf("ARG:\t%S\n", argv[i]);
 	}
 
 	const auto COMMAND_SPECIFIER = argv[1];
@@ -23,44 +34,64 @@ int main(int argc, char* argv[])
 	if (FAILED(hr)) { return 1; }
 
 	// Process device modifier (get device(s) specified).
-	if (strcmp(DEVICE_SPECIFIER, "-d") == 0 ||
-		strcmp(DEVICE_SPECIFIER, "default") == 0)
+
+	// DEFAULT DEVICE
+	if (lstrcmpW(DEVICE_SPECIFIER, L"-d") == 0 ||
+		lstrcmpW(DEVICE_SPECIFIER, L"default") == 0)
 	{
 		hr = deviceManager->GetDefaultAudioDevice();
 		if (FAILED(hr)) { return 1; }
 	}
-	else if (strcmp(DEVICE_SPECIFIER, "-a") == 0 ||
-		strcmp(DEVICE_SPECIFIER, "all") == 0)
+
+	// ALL DEVICES
+	else if (lstrcmpW(DEVICE_SPECIFIER, L"-a") == 0 ||
+		lstrcmpW(DEVICE_SPECIFIER, L"all") == 0)
 	{
 		deviceManager->GetDevices();
 		if (FAILED(hr)) { return 1; }
 	}
+
+	// SINGLE DEVICE (IF valid ID)
 	else {
-		deviceManager->GetDevices();
+		hr = deviceManager->GetDevices();
+		if (FAILED(hr)) { return 1; }
+
 		printf("Getting all devices to search for one.");
 		
-		// Check if can get device from ID.
+		// Check if it can get device from ID.
+		hr = deviceManager->PrintDevice((LPCWSTR*)&DEVICE_SPECIFIER);
+		if (FAILED(hr)) { printf("FAILED\n"); return 1; }
+
+		return 0;
 	}
 
 	// Process command modifier.
-	if (strcmp(COMMAND_SPECIFIER, "-l") == 0 ||
-		strcmp(COMMAND_SPECIFIER, "list") == 0)
+
+	// LIST
+	if (lstrcmpW(COMMAND_SPECIFIER, L"-l") == 0 ||
+		lstrcmpW(COMMAND_SPECIFIER, L"list") == 0)
 	{
 		hr = deviceManager->PrintDevices();
 		if (FAILED(hr)) { return 1; }
 	}
-	else if (strcmp(COMMAND_SPECIFIER, "-m") == 0 ||
-		strcmp(COMMAND_SPECIFIER, "mute") == 0)
+
+	// MUTE
+	else if (lstrcmpW(COMMAND_SPECIFIER, L"-m") == 0 ||
+		lstrcmpW(COMMAND_SPECIFIER, L"mute") == 0)
 	{
 		// Mute devices.
 	}
-	else if (strcmp(COMMAND_SPECIFIER, "-u") == 0 ||
-		strcmp(COMMAND_SPECIFIER, "unmute") == 0)
+
+	// UNMUTE
+	else if (lstrcmpW(COMMAND_SPECIFIER, L"-u") == 0 ||
+		lstrcmpW(COMMAND_SPECIFIER, L"unmute") == 0)
 	{
 		// unMute devices.
 	}
-	else if (strcmp(COMMAND_SPECIFIER, "-o") == 0 ||
-		strcmp(COMMAND_SPECIFIER, "observe") == 0)
+
+	// OBSERVE
+	else if (lstrcmpW(COMMAND_SPECIFIER, L"-o") == 0 ||
+		lstrcmpW(COMMAND_SPECIFIER, L"observe") == 0)
 	{
 		//Print devices specified to show initial data.
 		hr = deviceManager->PrintDevices();
