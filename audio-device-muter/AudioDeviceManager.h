@@ -17,6 +17,7 @@ private:
 	MMDeviceNotificationClient* mmNotificationClient;
 
 	HRESULT RegisterForMMDeviceNotifications();
+	HRESULT UnregisterFromMMDeviceNotifications();
 
 	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
 
