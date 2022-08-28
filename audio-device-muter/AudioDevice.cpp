@@ -3,6 +3,15 @@
 #include <string>
 #include <stdio.h>
 
+AudioDevice::AudioDevice()
+{
+	this->device = nullptr;
+	this->endpointVolume = nullptr;
+	this->props = nullptr;
+
+	this->volumeNotificationClient = new VolumeNotificationClient(FALSE);
+}
+
 AudioDevice::AudioDevice(
 	IMMDevice* device,
 	IAudioEndpointVolume* endpointVolume,

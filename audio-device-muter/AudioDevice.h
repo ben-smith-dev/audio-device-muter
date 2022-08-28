@@ -16,6 +16,8 @@ private:
 	VolumeNotificationClient* volumeNotificationClient;
 
 public:
+	AudioDevice();
+
 	AudioDevice(
 		IMMDevice* device,
 		IAudioEndpointVolume* endpointVolume,
