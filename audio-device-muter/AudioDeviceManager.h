@@ -16,14 +16,14 @@ private:
 
 	MMDeviceNotificationClient* mmNotificationClient;
 
-	HRESULT RegisterForMMDeviceNotifications();
-	HRESULT UnregisterFromMMDeviceNotifications();
-
 	HRESULT CheckIfDeviceInMap(LPCWSTR* deviceID, BOOL* inMap);
 
 public:
 	AudioDeviceManager();
 	~AudioDeviceManager();
+
+	HRESULT RegisterForMMDeviceNotifications();
+	HRESULT UnregisterFromMMDeviceNotifications();
 
 	HRESULT PrintDevices();
 	HRESULT PrintDevice(LPCWSTR* deviceId);
