@@ -1,22 +1,22 @@
 # audio-device-muter
-# Command Specifier
+## Command Specifier
 - list -l 
 - mute -m
 - umute -u
 - obersve -o
 
-# Device Specifier
+## Device Specifier
 - default -d
 - all -a
 - single device {id}
 
-# Running Console Application with command line arguements
+## Running Console Application with Command Line Arguments
 - .\audio-device-muter.exe [Command Specifier] [Device Specifier]
 
-# Examples
+## Command Examples
 - List all audio input devices: .\audio-device-muter.exe -l -a
 - Mute default audio input device: .\audio-device-muter.exe -m -d
 - Observe state changes for single device: .\audio-device-muter.exe -o {ID}
 
-# Remarks
+## Remarks
 - The device ID can be obtained by running a list command, which will print the device ID.
